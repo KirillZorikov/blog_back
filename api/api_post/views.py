@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, mixins
@@ -18,10 +20,21 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         post = get_object_or_404(Post, pk=self.kwargs['post_id'])
-        return post.comments.all()
+        return post.comments.filter(parent=None)
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
+    def get_serializer_context(self):
+        context = super(CommentViewSet, self).get_serializer_context()
+        trees = self.get_queryset()
+        children_dict = defaultdict(list)
+        for tree in trees:
+            descendants = tree.get_descendants()
+            for descendant in descendants:
+                children_dict[descendant.parent.pk].append(descendant)
+        context.update({'children': children_dict})
+        return context
 
 
 class PostViewSet(viewsets.ModelViewSet):

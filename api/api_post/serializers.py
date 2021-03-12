@@ -36,10 +36,16 @@ class PostSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     author = serializers.SlugRelatedField(slug_field='username',
                                           read_only=True)
+    children = serializers.SerializerMethodField(source='get_children')
 
     class Meta:
-        fields = '__all__'
+        fields = ('author', 'text', 'created', 'parent', 'children')
         model = Comment
+
+    def get_children(self, obj):
+        children = self.context['children'].get(obj.id, [])
+        serializer = CommentSerializer(children, many=True, context=self.context)
+        return serializer.data
 
 
 class GroupSerializer(serializers.ModelSerializer):
@@ -70,5 +76,3 @@ class FollowSerializer(serializers.ModelSerializer):
     class Meta:
         exclude = ('id',)
         model = Follow
-
-
