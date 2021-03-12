@@ -1,0 +1,11 @@
+<div class="list-group mb-5 groups">
+    <h4 class="card-header">Сообщества</h4>
+    {% for group in groups %}
+        <a href="{% url 'group_posts' group.slug %}"
+           class="list-group-item list-group-item-action
+           {% if slug == group.slug %}disabled active{% endif %}">
+            {{ group.title }}
+            <span class="badge badge-dark float-right">{{ group.count }}</span>
+        </a>
+    {% endfor %}
+</div>

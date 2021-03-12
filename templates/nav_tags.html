@@ -1,0 +1,16 @@
+<div class="card tags">
+    <div class="card-body">
+        <h4 class="card-title">Теги</h4>
+        <div class="tagcloud05">
+            <ul>
+                {% for tag in tags %}
+                    <li>
+                        <a href="{% url 'tag_posts' tag.slug %}">
+                            <span>{{ tag.title }}</span>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>

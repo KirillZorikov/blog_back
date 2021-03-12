@@ -1,0 +1,68 @@
+from django.conf import settings
+from django.conf.urls.static import static
+from django.urls import path
+
+from . import views
+
+urlpatterns = [
+    path('',
+         views.index,
+         name='index'),
+    path('new/',
+         views.new_post,
+         name='new'),
+    path("follow/",
+         views.follow_index,
+         name="follow_index"),
+    path("search/",
+         views.search_page,
+         name="search"),
+    path('<str:username>/',
+         views.profile,
+         name='profile'),
+    path('<int:post_id>/post_like/',
+         views.like,
+         name='post_like'),
+    path('<int:post_id>/post_dislike/',
+         views.like,
+         name='post_dislike'),
+    path('<int:comment_id>/comment_like/',
+         views.like,
+         name='comment_like'),
+    path('<int:comment_id>/comment_dislike/',
+         views.like,
+         name='comment_dislike'),
+    path('group/<str:slug>/',
+         views.group_posts,
+         name='group_posts'),
+    path('tag/<str:slug>/',
+         views.tag_posts,
+         name='tag_posts'),
+    path("<str:username>/follow/",
+         views.profile_follow,
+         name="profile_follow"),
+    path("<str:username>/unfollow/",
+         views.profile_unfollow,
+         name="profile_unfollow"),
+    path('<str:username>/<int:post_id>/',
+         views.post_view,
+         name='post'),
+    path('<str:username>/<int:post_id>/edit/',
+         views.post_edit,
+         name='post_edit'),
+    path('<str:username>/<int:post_id>/delete/',
+         views.post_delete,
+         name='post_delete'),
+    path("<str:username>/<int:post_id>/comment/",
+         views.add_comment,
+         name="add_comment"),
+    path("<str:username>/<int:post_id>/<int:comment_id>/reply/",
+         views.add_comment,
+         name="reply_comment"),
+]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL,
+                          document_root=settings.STATIC_ROOT)

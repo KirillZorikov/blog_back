@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load navigation %}
+{% block title %}Поиск{% endblock %}
+{% block header %}Поиск по запросу: "{{ search }}"{% endblock %}
+
+{% block content %}
+<div class="row mt-1">
+    <div class="col-lg-3">{% get_groups %}{% get_tags %}</div>
+    <div class="col-lg-9 mb-2">
+
+        {% for post in page %}
+                {% include "posts/include/card.html" with post=post %}
+        {% empty %}
+            <div class="card not-found h-100 text-center d-flex justify-content-center">
+                По вашему запросу "{{ search }}" ничего не найдено.
+            </div>
+        {% endfor %}
+        {% if page.has_other_pages %}
+            {% include "posts/include/paginator.html" with items=page paginator=paginator params=param %}
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}
