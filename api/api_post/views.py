@@ -7,7 +7,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import (IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 
-from posts.models import Follow, Group, Post
+from .models import Follow, Group, Post
 from . import serializers
 from .filters import PostFilter
 from .permissions import IsOwnerOrReadOnly
@@ -23,7 +23,8 @@ class CommentViewSet(viewsets.ModelViewSet):
         return post.comments.filter(parent=None)
 
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+        serializer.save(author=self.request.user,
+                        post_id=self.kwargs['post_id'])
 
     def get_serializer_context(self):
         context = super(CommentViewSet, self).get_serializer_context()

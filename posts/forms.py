@@ -2,7 +2,7 @@ from ckeditor.widgets import CKEditorWidget
 from django import forms
 from django.forms import ClearableFileInput
 
-from .models import Comment, Post
+from api.api_post.models import Comment, Post
 
 
 class CustomClearableFileInput(ClearableFileInput):

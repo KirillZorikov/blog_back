@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
 from .forms import CommentForm, PostForm
-from .models import Follow, Group, Post, User, Tag, Comment
+from api.api_post.models import Follow, Group, Post, User, Tag, Comment
 
 POSTS_PER_PAGE = 10
 

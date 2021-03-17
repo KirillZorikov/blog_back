@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from posts.models import Comment, Follow, Group, Post, User, Tag
+from .models import Comment, Follow, Group, Post, User, Tag
 
 
 class GroupFromPostSerializer(serializers.ModelSerializer):
@@ -36,15 +36,19 @@ class PostSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     author = serializers.SlugRelatedField(slug_field='username',
                                           read_only=True)
-    children = serializers.SerializerMethodField(source='get_children')
+    children = serializers.SerializerMethodField(source='get_children',
+                                                 read_only=True)
 
     class Meta:
-        fields = ('author', 'text', 'created', 'parent', 'children')
+        fields = ('id', 'post_id', 'author', 'text',
+                  'created', 'parent', 'children')
+        extra_kwargs = {'parent': {'required': True}}
         model = Comment
 
     def get_children(self, obj):
         children = self.context['children'].get(obj.id, [])
-        serializer = CommentSerializer(children, many=True, context=self.context)
+        serializer = CommentSerializer(children, many=True,
+                                       context=self.context)
         return serializer.data
 
 
@@ -69,8 +73,8 @@ class FollowSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         if data['author'] == data['user']:
-            raise serializers.ValidationError('Вы не можете '
-                                              'подписаться на себя.')
+            raise serializers.ValidationError('You can\'t subscribe '
+                                              'on herself.')
         return data
 
     class Meta:

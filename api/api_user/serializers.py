@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
 
-from posts.models import User
+from .models import User
 
 
 class UserLoginSerializer(serializers.Serializer):

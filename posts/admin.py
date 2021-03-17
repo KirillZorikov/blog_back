@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.utils.safestring import mark_safe
 from ckeditor.widgets import CKEditorWidget
 
-from .models import Follow, Group, Post, Comment, Tag
+from api.api_post.models import Follow, Group, Post, Comment, Tag
 
 
 class PostAdminForm(forms.ModelForm):
@@ -21,7 +21,7 @@ class PostAdmin(admin.ModelAdmin):
     list_filter = ('pub_date', 'group')
     readonly_fields = ('get_image', 'pub_date')
     fields = ('author', 'text', 'image', 'get_image',
-              'pub_date', 'tags', 'likes', 'dislikes')
+              'pub_date', 'tags', 'group')
     save_on_top = True
     save_as = True
     list_per_page = 30

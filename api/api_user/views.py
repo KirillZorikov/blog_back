@@ -1,10 +1,10 @@
 from django.contrib.auth import logout
-from rest_framework import generics, viewsets, status
+from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from posts.models import User
+from .models import User
 from . import serializers
 from .utils import authenticate_user
 
