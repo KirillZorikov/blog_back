@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
 
+from .mixins import RecaptchaValidationMixin
 from .models import User
 
 
@@ -35,13 +36,17 @@ class AuthUserSerializer(serializers.ModelSerializer):
         return str(RefreshToken.for_user(user=obj))
 
 
-class UserSignupSerializer(serializers.ModelSerializer):
+class UserSignupSerializer(serializers.ModelSerializer,
+                           RecaptchaValidationMixin):
+    recaptcha_key = serializers.CharField(required=True, write_only=True)
+
     class Meta:
         model = User
-        fields = ('username', 'email', 'password')
+        fields = ('username', 'email', 'password', 'recaptcha_key')
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
+        validated_data.pop('recaptcha_key')
         password = validated_data.pop('password')
         user = User(**validated_data)
         user.set_password(password)
@@ -50,16 +55,16 @@ class UserSignupSerializer(serializers.ModelSerializer):
 
 
 class ChangeUserPasswordSerializer(serializers.ModelSerializer):
-    password1 = serializers.CharField(write_only=True)
+    password = serializers.CharField(write_only=True)
     password2 = serializers.CharField(write_only=True)
     old_password = serializers.CharField(write_only=True)
 
     class Meta:
         model = User
-        fields = ('old_password', 'password1', 'password2')
+        fields = ('old_password', 'password', 'password2')
 
     def validate(self, attrs):
-        if attrs['password1'] != attrs['password2']:
+        if attrs['password'] != attrs['password2']:
             raise serializers.ValidationError(
                 {'password': 'Password fields didn\'t match.'}
             )
@@ -75,7 +80,7 @@ class ChangeUserPasswordSerializer(serializers.ModelSerializer):
         return value
 
     def update(self, instance, validated_data):
-        instance.set_password(validated_data['password1'])
+        instance.set_password(validated_data['password'])
         instance.save()
         return instance
 
