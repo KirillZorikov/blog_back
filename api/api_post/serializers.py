@@ -3,25 +3,31 @@ from rest_framework import serializers
 from .models import Comment, Follow, Group, Post, User, Tag
 
 
-class GroupFromPostSerializer(serializers.ModelSerializer):
+class GroupPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = ('slug', 'title')
 
 
-class TagFromPostSerializer(serializers.ModelSerializer):
+class TagPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
         fields = ('slug', 'title')
 
+class AuthorPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('username', 'last_name', 'first_name')
+
 
 class PostSerializer(serializers.ModelSerializer):
-    author = serializers.SlugRelatedField(slug_field='username',
-                                          read_only=True)
-    group = GroupFromPostSerializer(required=False)
-    tags = TagFromPostSerializer(required=False, many=True)
+    author = AuthorPostSerializer(read_only=True)
+    group = GroupPostSerializer(required=False)
+    tags = TagPostSerializer(required=False, many=True)
     likes_count = serializers.IntegerField(source='likes.count',
                                            read_only=True)
+    comments_count = serializers.IntegerField(source='comments.count',
+                                              read_only=True)
     liked = serializers.SerializerMethodField()
 
     class Meta:
