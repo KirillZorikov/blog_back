@@ -20,6 +20,12 @@ class AuthorPostSerializer(serializers.ModelSerializer):
         fields = ('username', 'last_name', 'first_name')
 
 
+class PostCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = ('text', 'image', 'group', 'tags', 'author')
+        extra_kwargs = {'author': {'required': False}}
+
 class PostSerializer(serializers.ModelSerializer):
     author = AuthorPostSerializer(read_only=True)
     group = GroupPostSerializer(required=False)
@@ -37,6 +43,8 @@ class PostSerializer(serializers.ModelSerializer):
     def get_liked(self, obj):
         """Check current user liked post."""
         return obj.liked
+
+
 
 
 class CommentSerializer(serializers.ModelSerializer):
