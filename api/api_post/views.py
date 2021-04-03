@@ -1,16 +1,18 @@
 from collections import defaultdict
 
+from django.db.models import Count
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets, mixins, status
+from rest_framework import viewsets, mixins, status, filters
 from rest_framework.decorators import action
 from rest_framework.permissions import (IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
 
-from .models import Follow, Group, Post
+from .models import Follow, Group, Post, Tag
 from . import serializers
 from .filters import PostFilter
+from .ordering import PostCustomOrdering
 from .permissions import IsOwnerOrReadOnly
 
 
@@ -40,8 +42,9 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 
 class PostViewSet(viewsets.ModelViewSet):
-    filter_backends = (DjangoFilterBackend,)
+    filter_backends = (DjangoFilterBackend, PostCustomOrdering)
     filter_class = PostFilter
+    # ordering_fields = ('comments_count', 'pub_date')
     permission_classes = (IsOwnerOrReadOnly, IsAuthenticatedOrReadOnly)
 
     @action(
@@ -72,8 +75,20 @@ class GroupViewSet(mixins.CreateModelMixin,
                    mixins.ListModelMixin,
                    viewsets.GenericViewSet):
     pagination_class = None
-    queryset = Group.objects.all()
+    queryset = Group.objects.annotate(posts_count=Count('posts'))
     serializer_class = serializers.GroupSerializer
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+    filter_backends = (filters.OrderingFilter, )
+    ordering_fields = ('posts_count', 'title')
+    http_method_names = ('get', 'post')
+
+
+class TagViewSet(mixins.CreateModelMixin,
+                   mixins.ListModelMixin,
+                   viewsets.GenericViewSet):
+    pagination_class = None
+    queryset = Tag.objects.all()
+    serializer_class = serializers.TagSerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)
     http_method_names = ('get', 'post')
 

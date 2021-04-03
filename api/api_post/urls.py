@@ -10,9 +10,14 @@ router.register(
     basename='posts',
 )
 router.register(
-    'group',
+    'groups',
     views.GroupViewSet,
     basename='group',
+)
+router.register(
+    'tags',
+    views.TagViewSet,
+    basename='tag',
 )
 router.register(
     'follow',
