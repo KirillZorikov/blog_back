@@ -9,10 +9,11 @@ class GroupPostSerializer(serializers.ModelSerializer):
         fields = ('slug', 'title')
 
 
-class TagPostSerializer(serializers.ModelSerializer):
+class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
         fields = ('slug', 'title')
+
 
 class AuthorPostSerializer(serializers.ModelSerializer):
     class Meta:
@@ -26,10 +27,11 @@ class PostCreateSerializer(serializers.ModelSerializer):
         fields = ('text', 'image', 'group', 'tags', 'author')
         extra_kwargs = {'author': {'required': False}}
 
+
 class PostSerializer(serializers.ModelSerializer):
     author = AuthorPostSerializer(read_only=True)
     group = GroupPostSerializer(required=False)
-    tags = TagPostSerializer(required=False, many=True)
+    tags = TagSerializer(required=False, many=True)
     likes_count = serializers.IntegerField(source='likes.count',
                                            read_only=True)
     comments_count = serializers.IntegerField(source='comments.count',
@@ -43,8 +45,6 @@ class PostSerializer(serializers.ModelSerializer):
     def get_liked(self, obj):
         """Check current user liked post."""
         return obj.liked
-
-
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -67,8 +67,11 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class GroupSerializer(serializers.ModelSerializer):
+    posts_count = serializers.IntegerField(source='posts.count',
+                                           read_only=True)
+
     class Meta:
-        fields = '__all__'
+        fields = ('title', 'slug', 'description', 'posts_count')
         extra_kwargs = {'slug': {'required': False},
                         'description': {'required': False}}
         model = Group
