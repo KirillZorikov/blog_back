@@ -5,6 +5,17 @@ from .mixins import RecaptchaValidationMixin
 from .models import User
 
 
+class UserInfoSerializer(serializers.ModelSerializer):
+    following_count = serializers.IntegerField(source='following.count')
+    followers_count = serializers.IntegerField(source='follower.count')
+    posts_count = serializers.IntegerField(source='posts.count')
+
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'email', 'first_name', 'last_name',
+                  'following_count', 'followers_count', 'posts_count')
+
+
 class UserLoginSerializer(serializers.Serializer):
     password = serializers.CharField(max_length=150, write_only=True)
     username = serializers.CharField(max_length=150, required=False)
@@ -24,7 +35,7 @@ class AuthUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'email', 'first_name',
-                  'last_name', 'is_active', 'is_staff', 'access_token',
+                  'last_name', 'access_token',
                   'refresh_token')
         read_only_fields = ('id', 'is_active', 'is_staff', 'access_token',
                             'refresh_token')
