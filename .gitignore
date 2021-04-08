@@ -22,5 +22,5 @@ static/admin
 static/ckeditor
 static/mptt
 
-db.sqlite3
+#db.sqlite3
 run.sh
