@@ -26,7 +26,7 @@ SECRET_KEY = '*uw8qfy!zc1k&ilha9notxcw=rp%s5#u8xpt#(w9i*&$if79&('
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['188.225.25.2', '127.0.0.1', 'localhost', 'kz-projects.tk', 'kz-blog.tk']
+ALLOWED_HOSTS = ['188.225.25.2', '127.0.0.1', 'localhost', 'kz-projects.tk', 'kz-blog.tk', '192.168.43.238']
 
 # Application definition
 
