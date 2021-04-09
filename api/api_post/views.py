@@ -73,6 +73,7 @@ class PostViewSet(viewsets.ModelViewSet):
 
 class GroupViewSet(mixins.CreateModelMixin,
                    mixins.ListModelMixin,
+                   mixins.RetrieveModelMixin,
                    viewsets.GenericViewSet):
     pagination_class = None
     queryset = Group.objects.annotate(posts_count=Count('posts'))
@@ -81,6 +82,7 @@ class GroupViewSet(mixins.CreateModelMixin,
     filter_backends = (filters.OrderingFilter, )
     ordering_fields = ('posts_count', 'title')
     http_method_names = ('get', 'post')
+    lookup_field = 'slug'
 
 
 class TagViewSet(mixins.CreateModelMixin,
