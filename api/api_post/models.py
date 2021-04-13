@@ -3,19 +3,74 @@ import os
 from ckeditor.fields import RichTextField
 from django.contrib.auth import get_user_model
 from django.db import models
-from django.db.models import Exists, OuterRef
+from django.db.models import Exists, OuterRef, Sum
 from mptt.models import MPTTModel, TreeForeignKey
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 
 User = get_user_model()
 
 
-class PostQuerySet(models.QuerySet):
-    def annotate_like(self, user):
+class ModelQuerySet(models.QuerySet):
+    def annotate_like_dislike(self, user):
         return self.annotate(
             liked=Exists(
-                Like.objects.filter(user=user.id, post_id=OuterRef('id')).only('id')
+                LikeDislike.objects.filter(
+                    user=user.id,
+                    # content_type=ContentType.objects.get_for_model(self.model),
+                    content_type__model=self.model.__name__.lower(),
+                    object_id=OuterRef('id'),
+                    vote=LikeDislike.LIKE
+                ).only('id')
+            )
+        ).annotate(
+            disliked=Exists(
+                LikeDislike.objects.filter(
+                    user=user.id,
+                    content_type__model=self.model.__name__.lower(),
+                    object_id=OuterRef('id'),
+                    vote=LikeDislike.DISLIKE
+                ).only('id')
             )
         )
+
+
+class LikeDislikeManager(models.Manager):
+    use_for_related_fields = True
+
+    def likes(self):
+        # We take the queryset with records greater than 0
+        return self.get_queryset().filter(vote__gt=0)
+
+    def dislikes(self):
+        # We take the queryset with records less than 0
+        return self.get_queryset().filter(vote__lt=0)
+
+    def sum_rating(self):
+        # We take the total rating
+        return self.get_queryset().aggregate(Sum('vote')).get('vote__sum') or 0
+
+
+class LikeDislike(models.Model):
+    LIKE = 1
+    DISLIKE = -1
+
+    VOTES = (
+        (DISLIKE, 'Dislike'),
+        (LIKE, 'Like')
+    )
+
+    vote = models.SmallIntegerField(verbose_name='Голос', choices=VOTES)
+    user = models.ForeignKey(User, verbose_name='Пользователь', on_delete=models.CASCADE)
+
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey()
+
+    objects = LikeDislikeManager()
+
+    class Meta:
+        unique_together = ('user', 'object_id')
 
 
 class Group(models.Model):
@@ -42,20 +97,6 @@ class Group(models.Model):
         get_latest_by = 'id'
         verbose_name = 'Сообщество'
         verbose_name_plural = 'Сообщества'
-
-
-class Like(models.Model):
-    user = models.ForeignKey(User, related_name='likes', on_delete=models.CASCADE)
-    post = models.ForeignKey('Post', related_name='likes', on_delete=models.CASCADE)
-
-    class Meta:
-        ordering = ('user',)
-        unique_together = ('user', 'post')
-        verbose_name = 'Лайк'
-        verbose_name_plural = 'Лайки'
-
-    def __str__(self):
-        return f'{self.user} liked {self.post}'
 
 
 class Post(models.Model):
@@ -102,8 +143,9 @@ class Post(models.Model):
         verbose_name='Теги',
         help_text='Теги, подходящие к записи.'
     )
+    votes = GenericRelation(LikeDislike, related_query_name='posts')
 
-    objects = PostQuerySet.as_manager()
+    objects = ModelQuerySet.as_manager()
 
     class Meta:
         get_latest_by = 'pub_date'
@@ -154,43 +196,9 @@ class Comment(MPTTModel):
         blank=True,
         related_name='children'
     )
+    votes = GenericRelation(LikeDislike, related_query_name='comments')
 
-    # likes = models.ManyToManyField(
-    #     User,
-    #     related_name='like_comments',
-    #     verbose_name='Лайк',
-    #     blank=True,
-    #     help_text=('Связь комментария c пользователями',
-    #                ' через отношение лайка.')
-    # )
-    # dislikes = models.ManyToManyField(
-    #     User,
-    #     related_name='dislike_comments',
-    #     verbose_name='ДизЛайк',
-    #     blank=True,
-    #     help_text=('Связь комментария c пользователями ',
-    #                'через отношение дизлайка.')
-    # )
-    #
-    # def add_like(self, user):
-    #     like_exists = self.likes.filter(id=user.id).exists()
-    #     dislike_exists = self.dislikes.filter(id=user.id).exists()
-    #     if like_exists:
-    #         self.likes.remove(user)
-    #     else:
-    #         self.likes.add(user)
-    #     if dislike_exists:
-    #         self.dislikes.remove(user)
-    #
-    # def add_dislike(self, user):
-    #     like_exists = self.likes.filter(id=user.id).exists()
-    #     dislike_exists = self.dislikes.filter(id=user.id).exists()
-    #     if dislike_exists:
-    #         self.dislikes.remove(user)
-    #     else:
-    #         self.dislikes.add(user)
-    #     if like_exists:
-    #         self.likes.remove(user)
+    objects = ModelQuerySet.as_manager()
 
     def __str__(self):
         return self.text[:15]

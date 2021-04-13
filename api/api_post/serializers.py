@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Comment, Follow, Group, Post, User, Tag
+from .models import Comment, Follow, Group, Post, User, Tag, LikeDislike
 
 
 class GroupPostSerializer(serializers.ModelSerializer):
@@ -36,7 +36,8 @@ class PostSerializer(serializers.ModelSerializer):
                                            read_only=True)
     comments_count = serializers.IntegerField(source='comments.count',
                                               read_only=True)
-    liked = serializers.SerializerMethodField()
+    liked = serializers.BooleanField()
+    disliked = serializers.BooleanField()
 
     class Meta:
         fields = '__all__'
@@ -97,3 +98,13 @@ class FollowSerializer(serializers.ModelSerializer):
     class Meta:
         exclude = ('id',)
         model = Follow
+
+
+class LikeDislikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LikeDislike
+        fields = '__all__'
+
+    def validate(self, attrs):
+        print(attrs)
+        return attrs
