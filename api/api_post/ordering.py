@@ -1,4 +1,4 @@
-from django.db.models import Count
+from django.db.models import Count, Q
 from rest_framework.filters import OrderingFilter
 
 
@@ -26,4 +26,9 @@ class PostCustomOrdering(OrderingFilter):
         for order in ordering:
             if 'comments_count' in order:
                 queryset = queryset.annotate(comments_count=Count('comments'))
+            if 'rating' in order:
+                queryset = queryset.annotate(
+                    rating=(Count('votes', filter=Q(votes__vote__gt=0)) -
+                            Count('votes', filter=Q(votes__vote__lt=0)))
+                )
         return queryset.order_by(*ordering)
