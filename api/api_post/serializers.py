@@ -36,6 +36,8 @@ class PostSerializer(serializers.ModelSerializer):
                                            read_only=True)
     comments_count = serializers.IntegerField(source='comments.count',
                                               read_only=True)
+    rating = serializers.IntegerField(source='votes.sum_rating',
+                                      read_only=True)
     liked = serializers.BooleanField()
     disliked = serializers.BooleanField()
 
