@@ -32,12 +32,12 @@ class PostSerializer(serializers.ModelSerializer):
     author = AuthorPostSerializer(read_only=True)
     group = GroupPostSerializer(required=False)
     tags = TagSerializer(required=False, many=True)
-    likes_count = serializers.IntegerField(source='likes.count',
+    likes_count = serializers.IntegerField(source='votes.likes.count',
                                            read_only=True)
+    dislikes_count = serializers.IntegerField(source='votes.dislikes.count',
+                                              read_only=True)
     comments_count = serializers.IntegerField(source='comments.count',
                                               read_only=True)
-    rating = serializers.IntegerField(source='votes.sum_rating',
-                                      read_only=True)
     liked = serializers.BooleanField()
     disliked = serializers.BooleanField()
 

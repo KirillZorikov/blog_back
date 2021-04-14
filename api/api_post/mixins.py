@@ -29,9 +29,8 @@ class LikeDislikeMixins:
         return Response({
             'liked': vote == LikeDislike.LIKE,
             'disliked': vote == LikeDislike.DISLIKE,
-            'like_count': obj.votes.likes().count(),
-            'dislike_count': obj.votes.dislikes().count(),
-            'sum_rating': obj.votes.sum_rating()
+            'likes_count': obj.votes.likes().count(),
+            'dislikes_count': obj.votes.dislikes().count(),
         }, status=response_status)
 
     @action(
