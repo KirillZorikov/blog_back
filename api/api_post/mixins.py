@@ -18,16 +18,17 @@ class LikeDislikeMixins:
             )
             if vote == likedislike.vote:
                 likedislike.delete()
+                vote = None
             else:
                 likedislike.vote = vote
                 likedislike.save(update_fields=['vote'])
             response_status = status.HTTP_200_OK
         except LikeDislike.DoesNotExist:
-            likedislike = obj.votes.create(user=user, vote=vote)
+            obj.votes.create(user=user, vote=vote)
             response_status = status.HTTP_201_CREATED
         return Response({
-            'liked': likedislike.vote == LikeDislike.LIKE,
-            'disliked': likedislike.vote == LikeDislike.DISLIKE,
+            'liked': vote == LikeDislike.LIKE,
+            'disliked': vote == LikeDislike.DISLIKE,
             'like_count': obj.votes.likes().count(),
             'dislike_count': obj.votes.dislikes().count(),
             'sum_rating': obj.votes.sum_rating()
