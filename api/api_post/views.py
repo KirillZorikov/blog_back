@@ -115,10 +115,12 @@ class TagViewSet(mixins.CreateModelMixin,
 
 class FollowViewSet(mixins.CreateModelMixin,
                     mixins.ListModelMixin,
+                    mixins.DestroyModelMixin,
                     viewsets.GenericViewSet):
+    pagination_class = None
     serializer_class = serializers.FollowSerializer
     permission_classes = (IsOwnerOrReadOnly, IsAuthenticated)
-    http_method_names = ('get', 'post')
+    lookup_field = 'author__username'
 
     def get_queryset(self):
         return Follow.objects.filter(user=self.request.user)
