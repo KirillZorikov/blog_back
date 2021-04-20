@@ -200,7 +200,6 @@ BLEACH_ALLOWED_STYLES = [
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
-CORS_URLS_REGEX = r'^/api/.*$'
 
 AUTH_USER_MODEL = 'api_user.CustomUser'
 
