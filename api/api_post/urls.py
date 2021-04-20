@@ -31,4 +31,7 @@ router.register(
 )
 urlpatterns = [
     path('v1/', include(router.urls)),
+    path('v1/<str:username>',
+         views.ProfileViewSet.as_view({'get': 'list'}),
+         name='profile'),
 ]

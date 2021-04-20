@@ -6,13 +6,13 @@ from .models import Comment, Follow, Group, Post, User, Tag, LikeDislike
 class GroupPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
-        fields = ('slug', 'title')
+        fields = ('id', 'slug', 'title')
 
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
-        fields = ('slug', 'title')
+        fields = ('id', 'slug', 'title')
 
 
 class AuthorPostSerializer(serializers.ModelSerializer):
@@ -45,10 +45,6 @@ class PostSerializer(serializers.ModelSerializer):
         fields = '__all__'
         model = Post
 
-    def get_liked(self, obj):
-        """Check current user liked post."""
-        return obj.liked
-
 
 class CommentSerializer(serializers.ModelSerializer):
     author = serializers.SlugRelatedField(slug_field='username',
@@ -74,7 +70,7 @@ class GroupSerializer(serializers.ModelSerializer):
                                            read_only=True)
 
     class Meta:
-        fields = ('title', 'slug', 'description', 'posts_count')
+        fields = ('id', 'title', 'slug', 'description', 'posts_count')
         extra_kwargs = {'slug': {'required': False},
                         'description': {'required': False}}
         model = Group
@@ -107,6 +103,5 @@ class LikeDislikeSerializer(serializers.ModelSerializer):
         model = LikeDislike
         fields = '__all__'
 
-    def validate(self, attrs):
-        print(attrs)
-        return attrs
+
+

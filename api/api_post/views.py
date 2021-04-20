@@ -1,17 +1,15 @@
 from collections import defaultdict
 
-from django.contrib.contenttypes.models import ContentType
-from django.db.models import Count
+from django.db.models import Count, Exists
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets, mixins, status, filters
+from rest_framework import viewsets, mixins, filters
 from rest_framework.decorators import action
 from rest_framework.permissions import (IsAuthenticated,
-                                        IsAuthenticatedOrReadOnly)
-from rest_framework.response import Response
+                                        IsAuthenticatedOrReadOnly, AllowAny)
 
 from .mixins import LikeDislikeMixins
-from .models import Follow, Group, Post, Tag, LikeDislike
+from .models import Follow, Group, Post, Tag, User
 from . import serializers
 from .filters import PostFilter
 from .ordering import PostCustomOrdering
@@ -48,13 +46,12 @@ class PostViewSet(viewsets.ModelViewSet,
                   LikeDislikeMixins):
     filter_backends = (DjangoFilterBackend, PostCustomOrdering)
     filter_class = PostFilter
-    # ordering_fields = ('comments_count', 'pub_date')
     permission_classes = (IsOwnerOrReadOnly, IsAuthenticatedOrReadOnly)
 
     @action(
         detail=False,
         methods=('get',),
-        permission_classes=(IsAuthenticated,),
+        permission_classes=(IsAuthenticated,)
     )
     def follow(self, request, *args, **kwargs):
         """Return all following's posts."""
@@ -75,6 +72,21 @@ class PostViewSet(viewsets.ModelViewSet,
         elif self.action in ['like', 'dislike']:
             return serializers.LikeDislikeSerializer
         return serializers.PostSerializer
+
+
+class ProfileViewSet(mixins.ListModelMixin,
+                     viewsets.GenericViewSet):
+    serializer_class = serializers.PostSerializer
+    permission_classes = (AllowAny,)
+    filter_backends = (DjangoFilterBackend, PostCustomOrdering)
+    filter_class = PostFilter
+    http_method_names = ('get',)
+
+    def get_queryset(self):
+        author = get_object_or_404(User, username=self.kwargs['username'])
+        return Post.objects.filter(
+            author=author
+        ).annotate_like_dislike(self.request.user)
 
 
 class GroupViewSet(mixins.CreateModelMixin,
