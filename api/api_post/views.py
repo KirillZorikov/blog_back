@@ -1,6 +1,4 @@
-from collections import defaultdict
-
-from django.db.models import Count, Exists
+from django.db.models import Count
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, mixins, filters
@@ -9,7 +7,7 @@ from rest_framework.permissions import (IsAuthenticated,
                                         IsAuthenticatedOrReadOnly, AllowAny)
 
 from .mixins import LikeDislikeMixins
-from .models import Follow, Group, Post, Tag, User
+from .models import Follow, Group, Post, Tag, User, Comment
 from . import serializers
 from .filters import PostFilter
 from .ordering import PostCustomOrdering
@@ -24,22 +22,31 @@ class CommentViewSet(viewsets.ModelViewSet,
 
     def get_queryset(self):
         post = get_object_or_404(Post, pk=self.kwargs['post_id'])
-        return post.comments.filter(parent=None)
+        return post.comments.filter().annotate_like_dislike(self.request.user)
 
     def perform_create(self, serializer):
+        parent_id = self.request.data.get('parent')
+        parent_comment = get_object_or_404(
+            Comment,
+            pk=parent_id,
+        ) if parent_id else None
+        if parent_comment and parent_comment.level > 2:
+            parent_comment = parent_comment.parent
         serializer.save(author=self.request.user,
-                        post_id=self.kwargs['post_id'])
+                        post_id=self.kwargs['post_id'],
+                        parent=parent_comment)
 
-    def get_serializer_context(self):
-        context = super(CommentViewSet, self).get_serializer_context()
-        trees = self.get_queryset()
-        children_dict = defaultdict(list)
-        for tree in trees:
-            descendants = tree.get_descendants()
-            for descendant in descendants:
-                children_dict[descendant.parent.pk].append(descendant)
-        context.update({'children': children_dict})
-        return context
+    # def get_serializer_context(self):
+    #     """terrible implementation of pretty nesting comments."""
+    #     context = super(CommentViewSet, self).get_serializer_context()
+    #     trees = self.get_queryset()
+    #     children_dict = defaultdict(list)
+    #     for tree in trees:
+    #         descendants = tree.get_descendants()
+    #         for descendant in descendants:
+    #             children_dict[descendant.parent.pk].append(descendant)
+    #     context.update({'children': children_dict})
+    #     return context
 
 
 class PostViewSet(viewsets.ModelViewSet,

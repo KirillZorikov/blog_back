@@ -49,20 +49,25 @@ class PostSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     author = serializers.SlugRelatedField(slug_field='username',
                                           read_only=True)
-    children = serializers.SerializerMethodField(source='get_children',
-                                                 read_only=True)
+    likes_count = serializers.IntegerField(source='votes.likes.count',
+                                           read_only=True)
+    dislikes_count = serializers.IntegerField(source='votes.dislikes.count',
+                                              read_only=True)
+    liked = serializers.BooleanField(read_only=True)
+    disliked = serializers.BooleanField(read_only=True)
+    # children = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
-        fields = ('id', 'post_id', 'author', 'text',
-                  'created', 'parent', 'children')
-        extra_kwargs = {'parent': {'required': True}}
+        exclude = ('lft', 'rght', 'tree_id')
+        extra_kwargs = {'post': {'required': False}}
+        # since we have post_id in params
         model = Comment
 
-    def get_children(self, obj):
-        children = self.context['children'].get(obj.id, [])
-        serializer = CommentSerializer(children, many=True,
-                                       context=self.context)
-        return serializer.data
+    # def get_children(self, obj):
+    #     children = self.context['children'].get(obj.id, [])
+    #     serializer = CommentSerializer(children, many=True,
+    #                                    context=self.context)
+    #     return serializer.data
 
 
 class GroupSerializer(serializers.ModelSerializer):
