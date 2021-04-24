@@ -21,7 +21,7 @@ class AuthorPostSerializer(serializers.ModelSerializer):
         fields = ('username', 'last_name', 'first_name')
 
 
-class PostCreateSerializer(serializers.ModelSerializer):
+class PostCreateUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ('text', 'image', 'group', 'tags', 'author')

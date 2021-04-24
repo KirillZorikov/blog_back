@@ -74,8 +74,8 @@ class PostViewSet(viewsets.ModelViewSet,
         serializer.save(author=self.request.user)
 
     def get_serializer_class(self):
-        if self.action == 'create':
-            return serializers.PostCreateSerializer
+        if self.action in ['create', 'update', 'partial_update']:
+            return serializers.PostCreateUpdateSerializer
         elif self.action in ['like', 'dislike']:
             return serializers.LikeDislikeSerializer
         return serializers.PostSerializer
