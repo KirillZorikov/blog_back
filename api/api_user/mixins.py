@@ -4,7 +4,7 @@ from requests import RequestException
 from rest_framework import serializers
 
 
-class RecaptchaValidationMixin(object):
+class RecaptchaValidationMixin:
     def validate_recaptcha_key(self, value):
         data = {
             'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,

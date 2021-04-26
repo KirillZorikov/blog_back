@@ -3,7 +3,7 @@ import os
 from ckeditor.fields import RichTextField
 from django.contrib.auth import get_user_model
 from django.db import models
-from django.db.models import Exists, OuterRef, Sum
+from django.db.models import Exists, OuterRef
 from mptt.models import MPTTModel, TreeForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
@@ -155,7 +155,10 @@ class Post(models.Model):
         return self.text[:15]
 
     def save(self, *args, **kwargs):
-        self.text_preview = self.text[:200]
+        if len(self.text) > 200:
+            self.text_preview = self.text[:200] + '...'
+        else:
+            self.text_preview = self.text[:len(self.text) // 2] + '...'
         super().save(*args, **kwargs)
 
 

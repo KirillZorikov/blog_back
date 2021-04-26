@@ -114,12 +114,14 @@ class GroupViewSet(mixins.CreateModelMixin,
 
 class TagViewSet(mixins.CreateModelMixin,
                  mixins.ListModelMixin,
+                 mixins.RetrieveModelMixin,
                  viewsets.GenericViewSet):
     pagination_class = None
     queryset = Tag.objects.all()
     serializer_class = serializers.TagSerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)
     http_method_names = ('get', 'post')
+    lookup_field = 'slug'
 
 
 class FollowViewSet(mixins.CreateModelMixin,

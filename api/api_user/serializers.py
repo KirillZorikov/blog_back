@@ -50,11 +50,21 @@ class AuthUserSerializer(serializers.ModelSerializer):
 class UserSignupSerializer(serializers.ModelSerializer,
                            RecaptchaValidationMixin):
     recaptcha_key = serializers.CharField(required=True, write_only=True)
+    password2 = serializers.CharField(required=True, write_only=True)
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'password', 'recaptcha_key')
+        fields = ('username', 'email',
+                  'password', 'recaptcha_key',
+                  'last_name', 'first_name')
         extra_kwargs = {'password': {'write_only': True}}
+
+    def validate(self, attrs):
+        if attrs['password'] != attrs['password2']:
+            raise serializers.ValidationError(
+                {'password': 'Password fields didn\'t match.'}
+            )
+        return attrs
 
     def create(self, validated_data):
         validated_data.pop('recaptcha_key')
@@ -79,7 +89,6 @@ class ChangeUserPasswordSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 {'password': 'Password fields didn\'t match.'}
             )
-
         return attrs
 
     def validate_old_password(self, value):

@@ -43,6 +43,7 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         fields = '__all__'
+        extra_kwargs = {'text_preview': {'read_only': True}}
         model = Post
 
 
