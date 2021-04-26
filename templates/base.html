@@ -7,12 +7,15 @@
     <title>{% block title %}{% endblock %} | Yatube</title>
     {% load static %}
     <link rel="shortcut icon" href="{% static 'imgs/ya.ico' %}" type="image/x-icon">
-    <script defer src="{% static 'fontawesome/js/all.js' %}"></script>
     <link rel="stylesheet" href="{% static 'bootstrap/dist/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'posts/style.css' %}">
-    <link rel="stylesheet" href="{% static 'fontawesome/css/fontawesome.css' %}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
-
+    <link rel="stylesheet" href="{% static 'fontawesome.css' %}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css"/>
+    <link rel="stylesheet"
+        href="https://use.fontawesome.com/releases/v5.2.0/css/all.css"
+        integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ"
+        crossorigin="anonymous">
     <script>
         document.addEventListener("DOMContentLoaded", function (event) {
             var scrollpos = sessionStorage.getItem('scrollpos');
@@ -29,23 +32,29 @@
 </head>
 
 <body class="d-flex flex-column min-vh-100">
-    {% include 'header.html' %}
-    <main>
-        <div class="container mt-4">
-            <h1 class="text-right">{% block header %}{% endblock %}</h1>
-            {% block content %}
-            {% endblock %}
-        </div>
-    </main>
-    {% include 'footer.html' %}
-    <script src="{% static 'jquery/dist/jquery.min.js' %}"></script>
-    <script src="{% static 'bootstrap/popper.min.js' %}"></script>
-    <script src="{% static 'bootstrap/dist/js/bootstrap.js' %}"></script>
-    <script src="{% static 'myscripts/upload_file_button.js' %}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
-    <script>
-        $('select').selectpicker();
-    </script>
+{% include 'header.html' %}
+<main>
+    <div class="container mt-4">
+        <h1 class="text-right">{% block header %}{% endblock %}</h1>
+        {% block content %}
+        {% endblock %}
+    </div>
+</main>
+{% include 'footer.html' %}
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+<script>
+    $('select').selectpicker();
+</script>
+<script src="{% static 'myscripts/upload_file_button.js' %}"></script>
 </body>
 
 </html>
