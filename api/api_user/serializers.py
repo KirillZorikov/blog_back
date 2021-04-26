@@ -56,7 +56,8 @@ class UserSignupSerializer(serializers.ModelSerializer,
         model = User
         fields = ('username', 'email',
                   'password', 'recaptcha_key',
-                  'last_name', 'first_name')
+                  'last_name', 'first_name',
+                  'password2')
         extra_kwargs = {'password': {'write_only': True}}
 
     def validate(self, attrs):
