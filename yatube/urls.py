@@ -3,13 +3,13 @@ from django.contrib import admin
 from django.contrib.flatpages import views
 from django.urls import include, path
 
-handler404 = "posts.views.page_not_found"
-handler500 = "posts.views.server_error"
+handler404 = 'django_templates.posts.views.page_not_found'
+handler500 = 'django_templates.posts.views.server_error'
 urlpatterns = [
     path('ckeditor/', include('ckeditor_uploader.urls')),
     path(
         'auth/',
-        include('users.urls')
+        include('django_templates.users.urls')
     ),
     path(
         'auth/',
@@ -39,7 +39,7 @@ urlpatterns = [
         name='about-spec'),
     path(
         '',
-        include('posts.urls')
+        include('django_templates.posts.urls')
     ),
     path('api/', include('api.api_post.urls')),
     path('api/', include('api.api_user.urls')),

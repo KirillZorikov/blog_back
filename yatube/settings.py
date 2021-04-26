@@ -33,8 +33,8 @@ ALLOWED_HOSTS = ['188.225.25.2', '127.0.0.1', 'localhost', 'kz-projects.tk', 'kz
 INSTALLED_APPS = [
     'api.api_user',
     'api.api_post',
-    'users',
-    'posts',
+    'django_templates.users',
+    'django_templates.posts',
     'mptt',
     'ckeditor',
     'sorl.thumbnail',
@@ -160,7 +160,7 @@ LOGIN_URL = '/auth/login/'
 LOGIN_REDIRECT_URL = 'index'
 
 AUTHENTICATION_BACKENDS = [
-    'users.auth.EmailAuthBackend',
+    'django_templates.users.auth.EmailAuthBackend',
     'django.contrib.auth.backends.ModelBackend',
 ]
 
