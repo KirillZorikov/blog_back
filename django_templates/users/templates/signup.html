@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block title %}Зарегистрироваться{% endblock %}
+{% block content %}
+{% load user_filters %}
+
+<div class="container register">
+    <div class="row">
+        <div class="col-md-3 register-left">
+            {% load static %}
+            <img src="{% static 'imgs/rocket.png' %}" alt=""/>
+            <h3>Добро пожаловать!</h3>
+            <p>Потратив всего 30 секунд на регистрацию,
+                вы сможете оставлять записи в этом замечательном блоге!</p>
+            <a href="{% url 'login' %}">
+                <input type="submit" name="" value="Войти"/> <br/>
+            </a>
+        </div>
+        <div class="col-md-9 register-right">
+            <div class="tab-content">
+                <div class="tab-pane fade show active"
+                     role="tabpanel" aria-labelledby="home-tab">
+                    <h3 class="register-heading">
+                        Регистрация
+                    </h3>
+                    <form class="row register-form"
+                          method="post" action="{% url 'signup' %}">
+                        {% csrf_token %}
+                        {% for field, errors in form.errors.items %}
+                            {% for error in errors %}
+                                <div class="alert alert-danger mb-2 w-100"
+                                     role="alert">
+                                    {{ field }}:
+                                    {{ error }}
+                                    <button type="button" class="close"
+                                            data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            {% endfor %}
+                        {% endfor %}
+                        {% for field in form %}
+                            <div class="form-group input-group"
+                                 aria-required={% if field.field.required %}
+                                                    "true"
+                                                {% else %}
+                                                    "false"
+                                                {% endif %}>
+                                {% if field.name == "first_name" %}
+                                    {% define "fa fa-id-badge fa-fw" as icon %}
+                                    {% define "class=form-control,placeholder=Ваше имя" as attrs %}
+                                {% elif field.name == "last_name" %}
+                                    {% define "fa fa-id-badge fa-fw" as icon %}
+                                    {% define "class=form-control,placeholder=Фамилия" as attrs %}
+                                {% elif field.name == "username" %}
+                                    {% define "fa fa-user fa-fw" as icon %}
+                                    {% define "class=form-control,placeholder=Имя пользователя" as attrs %}
+                                {% elif field.name == "email" %}
+                                    {% define "fa fa-envelope fa-fw" as icon %}
+                                    {% define "class=form-control,placeholder=Почтовый адрес" as attrs %}
+                                {% elif field.name == "password1" %}
+                                    {% define "fa fa-lock fa-fw" as icon %}
+                                    {% define "class=form-control,placeholder=Пароль" as attrs %}
+                                {% elif field.name == "password2" %}
+                                    {% define "fa fa-lock fa-fw" as icon %}
+                                    {% define "class=form-control,placeholder=Повторите пароль" as attrs %}
+                                {% endif %}
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <i class="{{ icon }}"></i>
+                                    </span>
+                                 </div>
+                                {% with arg=""|add:attrs %}
+                                    {{ field|add_attr:arg }}
+                                {% endwith %}
+                            </div>
+                        {% endfor %}
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert alert-danger mb-2" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="close ml-3"
+                                            data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                        <script src='https://www.google.com/recaptcha/api.js'></script>
+                        <div class="form-group g-recaptcha input-group"
+                             data-sitekey="6LdB0Q0aAAAAADNyqvkOzqNuhJnHglBjzY-LVzqn"></div>
+                        <div class="form-group mt-3">
+                            <button type="submit"
+                                    class="btn btn-primary btn-block">
+                                Зарегистрироваться
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
