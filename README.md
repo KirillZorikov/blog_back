@@ -13,7 +13,7 @@ Api: https://kz-api.tk/blog/api/v1
 
 Admin panel: https://kz-api.tk/admin_panel
 
-There is also a [django_templates](https://github.com/KirillZorikov/blog_back/tree/main/django_templates) dir covered with unit tests. This part is outdated and needs to be improved.
+There is also a [django_templates](https://github.com/KirillZorikov/blog_back/tree/main/django_templates) part covered with unit tests. This part is outdated and needs to be improved.
 
 <hr/>
 
