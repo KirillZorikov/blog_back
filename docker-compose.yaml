@@ -1,0 +1,39 @@
+version: '3.7'
+
+services:
+  blog_prod:
+    build: ./
+    image: kzorikov/blog_back:v1
+    command: gunicorn _project_settings_.wsgi:application --bind 0.0.0.0:8000
+    restart: always
+    depends_on:
+      - db_blog
+    volumes:
+      - static_value:/home/blog/blog_django/static/
+      - media_value:/home/blog/blog_django/media/
+    env_file:
+      - ./env_blog/.env.prod
+  db_blog:
+    image: postgres:12.0-alpine
+    volumes:
+      - blog_data:/var/lib/postgresql/data/
+    env_file:
+      - ./env_blog/.env.db
+    ports:
+      - 5433:5432
+  nginx:
+    image: nginx:1.19.0-alpine
+    restart: always
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - static_value:/home/blog/blog_django/static/
+      - media_value:/home/blog/blog_django/media/
+    ports:
+      - 80:80
+    depends_on:
+      - blog_prod
+
+volumes:
+  blog_data:
+  static_value:
+  media_value:

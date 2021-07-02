@@ -15,12 +15,13 @@ __pycache__/
 *.sublime-workspace
 
 sent_emails/
-media/
+#media/
 logs/
 config/
 static/admin
 static/ckeditor
 static/mptt
 
-#db.sqlite3
+db.sqlite3
 run.sh
+/env_blog/
