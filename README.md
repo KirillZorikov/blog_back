@@ -54,11 +54,6 @@ Frontend side:
 
 *See the full list of frontend dependencies here: [package.json](https://github.com/KirillZorikov/blog_front/blob/main/package.json)*
 
-## Project setup
-```
-docker-compose build
-```
-
 ## Project run
 ```
 docker-compose up
