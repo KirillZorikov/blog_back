@@ -66,6 +66,11 @@ docker-compose up
 docker-compose exec blog_prod python manage.py migrate
 ```
 
+## Collect static
+```
+docker-compose exec blog_prod python manage.py collectstatic
+```
+
 ## Create superuser
 ```
 docker-compose exec blog_prod python manage.py createsuperuser
