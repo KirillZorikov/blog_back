@@ -17,6 +17,7 @@ With this project, I learned about:
 * DRF
 * JWT auth
 * Docker
+* reCAPTCHA v2
 
 *Also, especially for this project, I started to learn the [Vue.js 3](https://v3.vuejs.org/).*
 
