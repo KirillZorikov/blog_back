@@ -50,6 +50,7 @@ Frontend side:
 
 * [Vue 3](https://v3.vuejs.org/)
 * [Bootstrap.js 4](https://getbootstrap.com/docs/4.0/getting-started/introduction/)
+* [CKEditor 5](https://ckeditor.com/docs/ckeditor5/latest/builds/guides/integration/frameworks/vuejs-v3.html)
 
 *See the full list of frontend dependencies here: [package.json](https://github.com/KirillZorikov/blog_front/blob/main/package.json)*
 
