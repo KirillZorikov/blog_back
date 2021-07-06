@@ -1,10 +1,10 @@
 # blog_back
 
-<hr/>
+---
 
 *My first django project. Mistakes were made.*
 
-<hr/>
+---
 
 It's a project where authors can publish posts. Users can rate and comment them, as well as subscribe to their favorite authors.
 
@@ -54,22 +54,24 @@ Frontend side:
 
 *See the full list of frontend dependencies here: [package.json](https://github.com/KirillZorikov/blog_front/blob/main/package.json)*
 
-## Project run
+## Project deployment
+
+### Project run
 ```
 docker-compose up
 ```
 
-## Apply migrations
+### Apply migrations
 ```
 docker-compose exec blog_prod python manage.py migrate
 ```
 
-## Collect static
+### Collect static
 ```
 docker-compose exec blog_prod python manage.py collectstatic
 ```
 
-## Create superuser
+### Create superuser
 ```
 docker-compose exec blog_prod python manage.py createsuperuser
 ```
