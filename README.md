@@ -16,6 +16,7 @@ With this project, I learned about:
 * Bootstrap.js
 * DRF
 * JWT auth
+* Docker
 
 *Also, especially for this project, I started to learn the [Vue.js 3](https://v3.vuejs.org/).*
 
@@ -28,7 +29,27 @@ With this project, I learned about:
 * Docker images: [backend](https://hub.docker.com/repository/docker/kzorikov/blog_back), [frontend](https://hub.docker.com/repository/docker/kzorikov/blog_front)
 
 
-There is also a [django_templates](https://github.com/KirillZorikov/blog_back/tree/main/django_templates) dir covered with unit tests. This part is outdated and needs to be improved.
+There is also a [django_templates](https://github.com/KirillZorikov/blog_back/tree/main/django_templates) part covered with unit tests. This part is outdated and needs to be improved.
+
+### Tech:
+
+Backend side:
+
+* [Python 3.8.5](https://www.python.org/)
+* [Django 2.2.6](https://www.djangoproject.com/) 
+* [DRF](https://www.django-rest-framework.org/)
+* [Nginx](https://www.nginx.com/)
+* [Gunicorn](https://gunicorn.org/)
+* [Docker](https://www.docker.com/)
+
+*See the full list of backend dependencies here: [requirements.txt](https://github.com/KirillZorikov/blog_back/blob/main/requirements.txt)*
+
+Frontend side:
+
+* [Vue 3](https://v3.vuejs.org/)
+* [Bootstrap.js 4](https://getbootstrap.com/docs/4.0/getting-started/introduction/)
+
+*See the full list of frontend dependencies here: [package.json](https://github.com/KirillZorikov/blog_front/blob/main/package.json)*
 
 ## Project setup
 ```
