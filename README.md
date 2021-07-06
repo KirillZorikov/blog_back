@@ -42,6 +42,7 @@ Backend side:
 * [Nginx](https://www.nginx.com/)
 * [Gunicorn](https://gunicorn.org/)
 * [Docker](https://www.docker.com/)
+* [reCAPTCHA v2](https://developers.google.com/recaptcha/docs/display)
 
 *See the full list of backend dependencies here: [requirements.txt](https://github.com/KirillZorikov/blog_back/blob/main/requirements.txt)*
 
