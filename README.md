@@ -27,7 +27,7 @@ With this project, I learned about:
 * Vue 3 frontend: https://github.com/KirillZorikov/blog_front
 * Api: https://kz-api.tk/blog/api/v1
 * Admin panel: https://kz-api.tk/blog/admin_panel
-* Docker images: [backend](https://hub.docker.com/repository/docker/kzorikov/blog_back), [frontend](https://hub.docker.com/repository/docker/kzorikov/blog_front)
+* Docker images: [backend](https://hub.docker.com/repository/docker/kzorikov/blog_back)
 
 
 There is also a [django_templates](https://github.com/KirillZorikov/blog_back/tree/main/django_templates) part covered with unit tests. This part is outdated and needs to be improved.
