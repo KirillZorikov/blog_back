@@ -23,10 +23,10 @@ With this project, I learned about:
 
 ### Project links:
 
-* Project site: https://kz-projects.tk/blog
-* Vue 3 frontend: https://github.com/KirillZorikov/blog_front
-* Api: https://kz-api.tk/blog/api/v1
-* Admin panel: https://kz-api.tk/blog/admin_panel
+* Project site: https://kz-projects.tk/blog/
+* Vue 3 frontend: https://github.com/KirillZorikov/blog_front/
+* Api: https://kz-api.tk/blog/api/v1/
+* Admin panel: https://kz-api.tk/blog/admin_panel/
 * Docker images: [backend](https://hub.docker.com/repository/docker/kzorikov/blog_back)
 
 
